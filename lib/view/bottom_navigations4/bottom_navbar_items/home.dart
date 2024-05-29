@@ -4,7 +4,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:security_app/controller/check_in_out_controller.dart';
 import 'package:security_app/view/app_widgets/app_widgets.dart';
 import 'package:security_app/view/app_widgets/custom_button.dart';
 import 'package:security_app/view/bottom_navigations4/bottom_nav_bar.dart';
@@ -22,6 +24,8 @@ import 'package:security_app/view/site_visit_report/site_visit_report_screen.dar
 import 'package:security_app/view/total_deployment_details_screen/total_deployment_details_screen.dart';
 import 'package:security_app/view/unMapped_site_screen/unmapped_site_screen.dart';
 
+import '../../custom_widgets/custom_long_button.dart';
+
 class Home4 extends StatefulWidget {
   const Home4({super.key});
 
@@ -33,6 +37,7 @@ class _Home4State extends State<Home4> {
   String buttonText = "Check-In";
   String? checkInTime;
   bool isCheckedIn = false;
+  final checkInOutController = Get.put(CheckInOutController());
 
   @override
   Widget build(BuildContext context) {
@@ -146,36 +151,43 @@ class _Home4State extends State<Home4> {
                             ),
                           ),
                         buildVSpacer(15),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: ElevatedButton(
-                            child: Text(
-                              buttonText,
-                              style: GoogleFonts.poppins(color: Colors.white),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if (!isCheckedIn) {
-                                  checkInTime = DateTime.now().toString();
-                                  buttonText = "Check-Out";
-                                  isCheckedIn = true;
-                                } else {
-                                  checkInTime = null;
-                                  buttonText = "Check-In";
-                                  isCheckedIn = false;
-                                }
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFFF02946),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
+                        Obx(() {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: AnimatedContainer(
+                              width:
+                                  checkInOutController.isLoading.value == false
+                                      ? MediaQuery.of(context).size.width
+                                      : 60,
+                              duration: const Duration(milliseconds: 300),
+                              child: CustomLongButton(
+                                name: buttonText,
+                                isLoading: checkInOutController.isLoading.value,
+                                ontap: () async {
+                                  if (!isCheckedIn) {
+                                    await checkInOutController.checkIn(context,
+                                        '8', false, 'Family vacation', 'dk');
+                                  } else {
+                                    await checkInOutController.checkOut(context,
+                                        false, 'Family vacation', 'dk');
+                                  }
+                                  setState(() {
+                                    if (!isCheckedIn) {
+                                      checkInTime = DateTime.now().toString();
+                                      buttonText = "Check-Out";
+                                      isCheckedIn = true;
+                                    } else {
+                                      checkInTime = null;
+                                      buttonText = "Check-In";
+                                      isCheckedIn = false;
+                                    }
+                                  });
+                                },
                               ),
-                              minimumSize: Size(double.infinity,
-                                  40), // expands to fit the horizontal space
                             ),
-                          ),
-                        ),
+                          );
+                        }),
                       ],
                     ),
                   ),

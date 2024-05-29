@@ -63,9 +63,7 @@ class ApiServices {
         data: data,
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
-      // if (response.status == 200) {
-      //   await getBookingRequest(4, 1);
-      // }
+
       return response;
     } catch (error) {
       // Handle errors
@@ -87,6 +85,38 @@ class ApiServices {
       rethrow;
     }
     return null;
+  }
+
+  postCheckIn(dynamic data) async {
+    try {
+      var response = await dio.post(
+        AppApiEndpoints.checkInUrl,
+        data: data,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      return response;
+    } catch (error) {
+      // Handle errors
+      print("Error updating user profile: $error");
+      rethrow;
+    }
+  }
+
+  postCheckOut(dynamic data) async {
+    try {
+      var response = await dio.post(
+        AppApiEndpoints.checkOutUrl,
+        data: data,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      return response;
+    } catch (error) {
+      // Handle errors
+      print("Error updating user profile: $error");
+      rethrow;
+    }
   }
 
 //   logout() async {

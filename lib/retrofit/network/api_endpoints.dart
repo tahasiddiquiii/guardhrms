@@ -12,6 +12,10 @@ class AppApiEndpoints {
   static const String leaveRequestUrl =
       "$baseUrl${_authResource}app/applyLeave";
 
+  // Checkin Checkout
+  static const String checkInUrl = "$baseUrl${_authResource}app/checkIn";
+  static const String checkOutUrl = "$baseUrl${_authResource}app/checkOut";
+
   // profile details
   static const String getUserProfile = "$baseUrl${_authResource}app/getProfile";
 
