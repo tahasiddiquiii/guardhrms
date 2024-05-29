@@ -3,17 +3,82 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
+import '../local/local_services.dart';
 import 'api_endpoints.dart';
 import '../../retrofit/network/dio_client.dart';
 
 class ApiServices {
   DioClient dio = DioClient();
 
+  var token = LocalServices.getToken();
+
   login(dynamic data) async {
     try {
       var response = await dio.post(
         AppApiEndpoints.loginUrl,
         data: jsonEncode(data),
+      );
+      if (response != null) {
+        return response;
+      }
+    } catch (error) {
+      rethrow;
+    }
+    return null;
+  }
+
+  verifyOtp(dynamic data, String loginId) async {
+    try {
+      var response = await dio.post(
+        "${AppApiEndpoints.verifyOtpUrl}$loginId",
+        data: jsonEncode(data),
+      );
+      if (response != null) {
+        return response;
+      }
+    } catch (error) {
+      rethrow;
+    }
+    return null;
+  }
+
+  resendOtp(String loginId) async {
+    try {
+      var response = await dio.post(
+        "${AppApiEndpoints.resendOtpUrl}$loginId",
+      );
+      if (response != null) {
+        return response;
+      }
+    } catch (error) {
+      rethrow;
+    }
+    return null;
+  }
+
+  postLeaveRequest(dynamic data) async {
+    try {
+      var response = await dio.post(
+        AppApiEndpoints.leaveRequestUrl,
+        data: data,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      // if (response.status == 200) {
+      //   await getBookingRequest(4, 1);
+      // }
+      return response;
+    } catch (error) {
+      // Handle errors
+      print("Error updating user profile: $error");
+      rethrow;
+    }
+  }
+
+  getUserProfile() async {
+    try {
+      var response = await dio.get(
+        AppApiEndpoints.getUserProfile,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
       if (response != null) {
         return response;

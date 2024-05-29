@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:security_app/view/splash_screen/splash_screen_1.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+Future<void> main() async {
+  await Hive.initFlutter();
+  await Hive.openBox("mainBox");
   runApp(const MyApp());
 }
 

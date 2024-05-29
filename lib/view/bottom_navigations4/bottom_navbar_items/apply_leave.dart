@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:security_app/view/app_widgets/app_widgets.dart';
 import 'package:security_app/view/app_widgets/custom_button.dart';
-import 'package:security_app/view/bottom_navigations4/bottom_nav_bar.dart'; // For date formatting
+import 'package:security_app/view/bottom_navigations4/bottom_nav_bar.dart';
+
+import '../../../controller/leave_controller.dart';
+import '../../custom_widgets/custom_long_button.dart'; // For date formatting
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class ApplyLeaveScreen4 extends StatefulWidget {
   const ApplyLeaveScreen4({super.key});
@@ -12,8 +20,13 @@ class ApplyLeaveScreen4 extends StatefulWidget {
 }
 
 class _ApplyLeaveScreen4State extends State<ApplyLeaveScreen4> {
+  final leaveController = Get.put(LeaveController());
   DateTime? _fromDate;
   DateTime? _toDate;
+
+  TextEditingController fromDateController = TextEditingController();
+  TextEditingController toDateController = TextEditingController();
+  TextEditingController reasonController = TextEditingController();
 
   Future<void> _selectDate(BuildContext context, bool isFromDate) async {
     final DateTime? picked = await showDatePicker(
@@ -27,9 +40,45 @@ class _ApplyLeaveScreen4State extends State<ApplyLeaveScreen4> {
       setState(() {
         if (isFromDate) {
           _fromDate = picked;
+          fromDateController.text = DateFormat('yyyy-MM-dd').format(picked);
         } else {
           _toDate = picked;
+          toDateController.text = DateFormat('yyyy-MM-dd').format(picked);
         }
+      });
+    }
+  }
+
+  void _validateAndSubmit() async {
+    if (fromDateController.text.isEmpty ||
+        toDateController.text.isEmpty ||
+        reasonController.text.isEmpty) {
+      // Show error message if any field is empty
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please fill out all fields before submitting."),
+        ),
+      );
+    } else {
+      // Proceed with the API request
+      leaveController.requestLeave(
+        context,
+        fromDateController.text,
+        toDateController.text,
+        reasonController.text,
+      );
+
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const SuccessDialog();
+        },
+      ).then((value) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => AppBottomNavBar4(index: 0),
+          ),
+        );
       });
     }
   }
@@ -68,6 +117,7 @@ class _ApplyLeaveScreen4State extends State<ApplyLeaveScreen4> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18.0),
               child: buildCustomTextField1(
+                controller: fromDateController,
                 hintText: _fromDate == null
                     ? 'Select date'
                     : DateFormat('yyyy-MM-dd').format(_fromDate!),
@@ -81,6 +131,7 @@ class _ApplyLeaveScreen4State extends State<ApplyLeaveScreen4> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18.0),
               child: buildCustomTextField1(
+                controller: toDateController,
                 hintText: _toDate == null
                     ? 'Select date'
                     : DateFormat('yyyy-MM-dd').format(_toDate!),
@@ -94,36 +145,29 @@ class _ApplyLeaveScreen4State extends State<ApplyLeaveScreen4> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18.0),
               child: buildCustomTextField1(
+                controller: reasonController,
                 hintText: "Enter the reason for leave...",
                 inputContainerHeight: 120,
               ),
             ),
             SizedBox(height: 50),
-            Padding(
+            Obx(() {
+              return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
-                child: CustomButton(
-                  text: "Send Request",
-                  onPressed: () async {
-                    // Showing the success dialog
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const SuccessDialog(); // Using the custom dialog widget
-                      },
-                    );
-
-                    // Waiting for 5 seconds
-                    await Future.delayed(const Duration(seconds: 5));
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => AppBottomNavBar4(
-                          index: 0,
-                        ),
-                      ),
-                    );
-                  },
-                )),
+                child: AnimatedContainer(
+                  width: leaveController.isLoading.value == false
+                      ? MediaQuery.of(context).size.width
+                      : 60,
+                  duration: const Duration(milliseconds: 300),
+                  child: CustomLongButton(
+                    name: "Send Request",
+                    isLoading: leaveController.isLoading.value,
+                    ontap: _validateAndSubmit,
+                  ),
+                ),
+              );
+            }),
           ],
         ),
       ),

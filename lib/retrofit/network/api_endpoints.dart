@@ -5,11 +5,16 @@ class AppApiEndpoints {
   //Login Module
   static const String _authResource = "/api/v1/";
   static const String loginUrl = "$baseUrl${_authResource}app/signin";
-  // static const String testapi = "https://jsonplaceholder.typicode.com/posts";
+  static const String verifyOtpUrl = "$baseUrl${_authResource}app/verifyOTP/";
+  static const String resendOtpUrl = "$baseUrl${_authResource}app/resendOtp/";
+
+  // LEAVE request
+  static const String leaveRequestUrl =
+      "$baseUrl${_authResource}app/applyLeave";
 
   // profile details
-  static const String getUserProfile =
-      "$baseUrl${_authResource}user/get-profile";
+  static const String getUserProfile = "$baseUrl${_authResource}app/getProfile";
+
   static const String updateUserProfile =
       "$baseUrl${_authResource}user/update-profile";
   static const String logout = "$baseUrl${_authResource}logout";

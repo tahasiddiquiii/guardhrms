@@ -69,7 +69,9 @@ class _SignUpScreen4State extends State<SignUpScreen4> {
                           authController.isLoginFail.value = false;
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => VerifyOtpScreen4(),
+                              builder: (context) => VerifyOtpScreen4(
+                                phoneNumber: phoneController.text,
+                              ),
                             ),
                           );
                           // Show Snackbar
