@@ -24,6 +24,7 @@ import 'package:security_app/view/site_visit_report/site_visit_report_screen.dar
 import 'package:security_app/view/total_deployment_details_screen/total_deployment_details_screen.dart';
 import 'package:security_app/view/unMapped_site_screen/unmapped_site_screen.dart';
 
+import '../../../controller/profile_controller.dart';
 import '../../custom_widgets/custom_long_button.dart';
 
 class Home4 extends StatefulWidget {
@@ -38,473 +39,560 @@ class _Home4State extends State<Home4> {
   String? checkInTime;
   bool isCheckedIn = false;
   final checkInOutController = Get.put(CheckInOutController());
+  final profileController = Get.put(ProfileController());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (profileController.profileDetailsModel == null) {
+      profileController.getProfileDetails();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
       return Scaffold(
-        // appBar: ,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 18, right: 18, top: 70),
-                child: Row(
+          // appBar: ,
+          body: Obx(() {
+        return profileController.isLoading.value == true
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
+              )
+            : SingleChildScrollView(
+                child: Column(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                      child: Image.asset('assets/menu.png'),
-                    ),
-                    Spacer(),
-                    Image.asset(
-                      'assets/icon_small.png',
-                      scale: 0.9,
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => AppBottomNavBar4(
-                                index: 3,
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 18, right: 18, top: 70),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Scaffold.of(context).openDrawer();
+                            },
+                            child: Image.asset('assets/menu.png'),
+                          ),
+                          Spacer(),
+                          Image.asset(
+                            'assets/icon_small.png',
+                            scale: 0.9,
+                          ),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => AppBottomNavBar4(
+                                    index: 3,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Image(
+                                    image: NetworkImage(profileController
+                                        .profileDetailsModel!
+                                        .data!
+                                        .profilePic!)),
                               ),
                             ),
-                          );
-                        },
-                        child: Image.asset('assets/profile_small.png')),
-                  ],
-                ),
-              ),
-              buildVSpacer(20),
-              _buildTextHeader(title: 'Duty Details', size: 16),
-              Card(
-                elevation: 5,
-                child: Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            _buildTextHeader(
-                                title: "Role", fontWeight: FontWeight.bold),
-                            buildHSpacer(42),
-                            _buildTextHeader(title: ":"),
-                            _buildTextHeader(
-                                title: "Branch Head / Regional Head"),
-                          ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    buildVSpacer(20),
+                    _buildTextHeader(title: 'Duty Details', size: 16),
+                    Card(
+                      elevation: 5,
+                      child: Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  _buildTextHeader(
+                                      title: "Role",
+                                      fontWeight: FontWeight.bold),
+                                  buildHSpacer(42),
+                                  _buildTextHeader(title: ":"),
+                                  _buildTextHeader(
+                                      title: "Branch Head / Regional Head"),
+                                ],
+                              ),
+                              buildVSpacer(15),
+                              Row(
+                                children: [
+                                  _buildTextHeader(
+                                      title: "Status",
+                                      fontWeight: FontWeight.bold),
+                                  buildHSpacer(30),
+                                  _buildTextHeader(title: ":"),
+                                  _buildTextHeader(
+                                      title:
+                                          isCheckedIn ? "On Duty" : "Off Duty",
+                                      color: isCheckedIn
+                                          ? Colors.green
+                                          : Colors.red),
+                                ],
+                              ),
+                              buildVSpacer(15),
+                              if (checkInTime != null)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 0.0, vertical: 0.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          _buildTextHeader(
+                                            title: "Check-In Time    : ",
+                                          ),
+                                          _buildTextHeader(
+                                            title: "09:00 AM",
+                                          ),
+                                        ],
+                                      ),
+                                      buildVSpacer(15),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MapScreen()));
+                                        },
+                                        child: Row(
+                                          children: [
+                                            _buildTextHeader(
+                                              title: "Location              : ",
+                                            ),
+                                            Flexible(
+                                                child: _buildTextHeader(
+                                              title:
+                                                  "Symboilc Apartments 34-B, NoidaUttar pradesh , India.",
+                                            )),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              buildVSpacer(15),
+                              Obx(() {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: AnimatedContainer(
+                                    width:
+                                        checkInOutController.isLoading.value ==
+                                                false
+                                            ? MediaQuery.of(context).size.width
+                                            : 60,
+                                    duration: const Duration(milliseconds: 300),
+                                    child: CustomLongButton(
+                                      name: buttonText,
+                                      isLoading:
+                                          checkInOutController.isLoading.value,
+                                      ontap: () async {
+                                        if (!isCheckedIn) {
+                                          await checkInOutController.checkIn(
+                                              context,
+                                              '8',
+                                              false,
+                                              'Family vacation',
+                                              'dk');
+                                        } else {
+                                          await checkInOutController.checkOut(
+                                              context,
+                                              false,
+                                              'Family vacation',
+                                              'dk');
+                                        }
+                                        setState(() {
+                                          if (!isCheckedIn) {
+                                            checkInTime =
+                                                DateTime.now().toString();
+                                            buttonText = "Check-Out";
+                                            isCheckedIn = true;
+                                          } else {
+                                            checkInTime = null;
+                                            buttonText = "Check-In";
+                                            isCheckedIn = false;
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
                         ),
-                        buildVSpacer(15),
-                        Row(
-                          children: [
-                            _buildTextHeader(
-                                title: "Status", fontWeight: FontWeight.bold),
-                            buildHSpacer(30),
-                            _buildTextHeader(title: ":"),
-                            _buildTextHeader(
-                                title: isCheckedIn ? "On Duty" : "Off Duty",
-                                color: isCheckedIn ? Colors.green : Colors.red),
-                          ],
+                      ),
+                    ),
+                    buildVSpacer(20),
+                    _buildTextHeader(title: 'Pin Site Visit', size: 16),
+                    buildVSpacer(20),
+                    Card(
+                      elevation: 5,
+                      child: Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: CustomButton(
+                                    text: "Visit Site",
+                                    height: 40,
+                                    onPressed: () {
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SiteVisitReportScreen()));
+                                    }),
+                              ),
+                              buildVSpacer(15),
+                            ],
+                          ),
                         ),
-                        buildVSpacer(15),
-                        if (checkInTime != null)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0, vertical: 0.0),
+                      ),
+                    ),
+                    buildVSpacer(20),
+                    _buildTextHeader(title: 'Mapped Site’s', size: 16),
+                    buildVSpacer(20),
+                    Card(
+                      elevation: 5,
+                      child: Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      _buildTextHeader(
+                                          title: "Total Sites", size: 16),
+                                      buildVSpacer(10),
+                                      _buildTextHeader(
+                                          title: "50",
+                                          color: Colors.red,
+                                          size: 16)
+                                    ],
+                                  ),
+                                  buildHSpacer(60),
+                                  Column(
+                                    children: [
+                                      _buildTextHeader(
+                                          title: "Total Guards", size: 16),
+                                      buildVSpacer(10),
+                                      _buildTextHeader(
+                                          title: "250",
+                                          color: Colors.red,
+                                          size: 16)
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: CustomButton(
+                                    text: "View-All",
+                                    height: 40,
+                                    onPressed: () {
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MappedSiteDetailsScreen()));
+                                    }),
+                              ),
+                              buildVSpacer(15),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    buildVSpacer(30),
+                    buildVSpacer(20),
+                    _buildTextHeader(title: 'Daily Deployment', size: 16),
+                    buildVSpacer(20),
+                    Card(
+                      elevation: 5,
+                      child: Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
                             child: Column(
                               children: [
                                 Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    _buildTextHeader(
-                                      title: "Check-In Time    : ",
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TotalDeploymentDetailsScreen()));
+                                      },
+                                      child: Column(
+                                        children: [
+                                          _buildTextHeader(
+                                              title: "50",
+                                              size: 16,
+                                              hasBorder: true),
+                                          buildVSpacer(10),
+                                          _buildText(
+                                              title: "Total\nDeployment",
+                                              size: 16),
+                                        ],
+                                      ),
                                     ),
-                                    _buildTextHeader(
-                                      title: "09:00 AM",
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PresentDetailsScreen()));
+                                      },
+                                      child: Column(
+                                        children: [
+                                          _buildTextHeader(
+                                              title: "50",
+                                              size: 16,
+                                              hasBorder: true),
+                                          buildVSpacer(10),
+                                          _buildText(
+                                              title: "Present", size: 16),
+                                        ],
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ShortageDetailsScreen()));
+                                      },
+                                      child: Column(
+                                        children: [
+                                          _buildTextHeader(
+                                              title: "50",
+                                              size: 16,
+                                              hasBorder: true),
+                                          buildVSpacer(10),
+                                          _buildText(
+                                              title: "Shortage", size: 16),
+                                        ],
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DoubleDutyScreen()));
+                                      },
+                                      child: Column(
+                                        children: [
+                                          _buildTextHeader(
+                                              title: "50",
+                                              size: 16,
+                                              hasBorder: true),
+                                          buildVSpacer(10),
+                                          _buildText(
+                                              title: "Double\nDuty", size: 16),
+                                        ],
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UnMappedDiteDetailsScreen()));
+                                      },
+                                      child: Column(
+                                        children: [
+                                          _buildTextHeader(
+                                              title: "50",
+                                              size: 16,
+                                              hasBorder: true),
+                                          buildVSpacer(10),
+                                          _buildText(
+                                              title: "UnMapped\nSite",
+                                              size: 16),
+                                        ],
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LateDetailsScreen()));
+                                      },
+                                      child: Column(
+                                        children: [
+                                          _buildTextHeader(
+                                              title: "05",
+                                              size: 16,
+                                              hasBorder: true),
+                                          buildVSpacer(10),
+                                          _buildText(title: "Late", size: 16),
+                                        ],
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EarlyCheckOutScreen()));
+                                      },
+                                      child: Column(
+                                        children: [
+                                          _buildTextHeader(
+                                              title: "14",
+                                              size: 16,
+                                              hasBorder: true),
+                                          buildVSpacer(10),
+                                          _buildText(
+                                              title: "EarlyCheck\nOut",
+                                              size: 16),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
                                 buildVSpacer(15),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => MapScreen()));
-                                  },
-                                  child: Row(
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    buildVSpacer(20),
+                    _buildTextHeader(title: 'Monthly Deployment', size: 16),
+                    buildVSpacer(20),
+                    Card(
+                      elevation: 5,
+                      child: Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ManDaysRequiredScreen()));
+                              },
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      _buildTextHeader(
-                                        title: "Location              : ",
+                                      Column(
+                                        children: [
+                                          _buildTextHeader(
+                                              title: "50",
+                                              size: 16,
+                                              hasBorder: true),
+                                          buildVSpacer(10),
+                                          _buildText(
+                                              title: "Man Days\nRequired",
+                                              size: 16),
+                                        ],
                                       ),
-                                      Flexible(
-                                          child: _buildTextHeader(
-                                        title:
-                                            "Symboilc Apartments 34-B, NoidaUttar pradesh , India.",
-                                      )),
+                                      Column(
+                                        children: [
+                                          _buildTextHeader(
+                                              title: "50",
+                                              size: 16,
+                                              hasBorder: true),
+                                          buildVSpacer(10),
+                                          _buildText(
+                                              title: "Duties\nDone", size: 16),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          _buildTextHeader(
+                                              title: "50",
+                                              size: 16,
+                                              hasBorder: true),
+                                          buildVSpacer(10),
+                                          _buildText(
+                                              title: "Short Man\nDays",
+                                              size: 16),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          _buildTextHeader(
+                                              title: "50",
+                                              size: 16,
+                                              hasBorder: true),
+                                          buildVSpacer(10),
+                                          _buildText(
+                                              title: "Stability\nCoefficient",
+                                              size: 16),
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                ),
-                              ],
+                                  buildVSpacer(15),
+                                ],
+                              ),
                             ),
                           ),
-                        buildVSpacer(15),
-                        Obx(() {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: AnimatedContainer(
-                              width:
-                                  checkInOutController.isLoading.value == false
-                                      ? MediaQuery.of(context).size.width
-                                      : 60,
-                              duration: const Duration(milliseconds: 300),
-                              child: CustomLongButton(
-                                name: buttonText,
-                                isLoading: checkInOutController.isLoading.value,
-                                ontap: () async {
-                                  if (!isCheckedIn) {
-                                    await checkInOutController.checkIn(context,
-                                        '8', false, 'Family vacation', 'dk');
-                                  } else {
-                                    await checkInOutController.checkOut(context,
-                                        false, 'Family vacation', 'dk');
-                                  }
-                                  setState(() {
-                                    if (!isCheckedIn) {
-                                      checkInTime = DateTime.now().toString();
-                                      buttonText = "Check-Out";
-                                      isCheckedIn = true;
-                                    } else {
-                                      checkInTime = null;
-                                      buttonText = "Check-In";
-                                      isCheckedIn = false;
-                                    }
-                                  });
-                                },
-                              ),
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              buildVSpacer(20),
-              _buildTextHeader(title: 'Pin Site Visit', size: 16),
-              buildVSpacer(20),
-              Card(
-                elevation: 5,
-                child: Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: CustomButton(
-                              text: "Visit Site",
-                              height: 40,
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            SiteVisitReportScreen()));
-                              }),
-                        ),
-                        buildVSpacer(15),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              buildVSpacer(20),
-              _buildTextHeader(title: 'Mapped Site’s', size: 16),
-              buildVSpacer(20),
-              Card(
-                elevation: 5,
-                child: Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                _buildTextHeader(
-                                    title: "Total Sites", size: 16),
-                                buildVSpacer(10),
-                                _buildTextHeader(
-                                    title: "50", color: Colors.red, size: 16)
-                              ],
-                            ),
-                            buildHSpacer(60),
-                            Column(
-                              children: [
-                                _buildTextHeader(
-                                    title: "Total Guards", size: 16),
-                                buildVSpacer(10),
-                                _buildTextHeader(
-                                    title: "250", color: Colors.red, size: 16)
-                              ],
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: CustomButton(
-                              text: "View-All",
-                              height: 40,
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            MappedSiteDetailsScreen()));
-                              }),
-                        ),
-                        buildVSpacer(15),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              buildVSpacer(30),
-              buildVSpacer(20),
-              _buildTextHeader(title: 'Daily Deployment', size: 16),
-              buildVSpacer(20),
-              Card(
-                elevation: 5,
-                child: Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              TotalDeploymentDetailsScreen()));
-                                },
-                                child: Column(
-                                  children: [
-                                    _buildTextHeader(
-                                        title: "50", size: 16, hasBorder: true),
-                                    buildVSpacer(10),
-                                    _buildText(
-                                        title: "Total\nDeployment", size: 16),
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              PresentDetailsScreen()));
-                                },
-                                child: Column(
-                                  children: [
-                                    _buildTextHeader(
-                                        title: "50", size: 16, hasBorder: true),
-                                    buildVSpacer(10),
-                                    _buildText(title: "Present", size: 16),
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ShortageDetailsScreen()));
-                                },
-                                child: Column(
-                                  children: [
-                                    _buildTextHeader(
-                                        title: "50", size: 16, hasBorder: true),
-                                    buildVSpacer(10),
-                                    _buildText(title: "Shortage", size: 16),
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              DoubleDutyScreen()));
-                                },
-                                child: Column(
-                                  children: [
-                                    _buildTextHeader(
-                                        title: "50", size: 16, hasBorder: true),
-                                    buildVSpacer(10),
-                                    _buildText(title: "Double\nDuty", size: 16),
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              UnMappedDiteDetailsScreen()));
-                                },
-                                child: Column(
-                                  children: [
-                                    _buildTextHeader(
-                                        title: "50", size: 16, hasBorder: true),
-                                    buildVSpacer(10),
-                                    _buildText(
-                                        title: "UnMapped\nSite", size: 16),
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              LateDetailsScreen()));
-                                },
-                                child: Column(
-                                  children: [
-                                    _buildTextHeader(
-                                        title: "05", size: 16, hasBorder: true),
-                                    buildVSpacer(10),
-                                    _buildText(title: "Late", size: 16),
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              EarlyCheckOutScreen()));
-                                },
-                                child: Column(
-                                  children: [
-                                    _buildTextHeader(
-                                        title: "14", size: 16, hasBorder: true),
-                                    buildVSpacer(10),
-                                    _buildText(
-                                        title: "EarlyCheck\nOut", size: 16),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          buildVSpacer(15),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              buildVSpacer(20),
-              _buildTextHeader(title: 'Monthly Deployment', size: 16),
-              buildVSpacer(20),
-              Card(
-                elevation: 5,
-                child: Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ManDaysRequiredScreen()));
-                        },
-                        child: Column(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    _buildTextHeader(
-                                        title: "50", size: 16, hasBorder: true),
-                                    buildVSpacer(10),
-                                    _buildText(
-                                        title: "Man Days\nRequired", size: 16),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    _buildTextHeader(
-                                        title: "50", size: 16, hasBorder: true),
-                                    buildVSpacer(10),
-                                    _buildText(title: "Duties\nDone", size: 16),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    _buildTextHeader(
-                                        title: "50", size: 16, hasBorder: true),
-                                    buildVSpacer(10),
-                                    _buildText(
-                                        title: "Short Man\nDays", size: 16),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    _buildTextHeader(
-                                        title: "50", size: 16, hasBorder: true),
-                                    buildVSpacer(10),
-                                    _buildText(
-                                        title: "Stability\nCoefficient",
-                                        size: 16),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            buildVSpacer(15),
-                          ],
                         ),
                       ),
                     ),
-                  ),
+                    buildVSpacer(30),
+                    _buildTextHeader(title: 'Daily Attendance :', size: 16),
+                    widgetCal()
+                  ],
                 ),
-              ),
-              buildVSpacer(30),
-              _buildTextHeader(title: 'Daily Attendance :', size: 16),
-              widgetCal()
-            ],
-          ),
-        ),
-      );
+              );
+      }));
     });
   }
 

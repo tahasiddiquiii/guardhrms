@@ -72,10 +72,26 @@ class ApiServices {
     }
   }
 
+  postaddEmployee(dynamic data) async {
+    try {
+      var response = await dio.post(
+        AppApiEndpoints.addUserUrl,
+        data: data,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      return response;
+    } catch (error) {
+      // Handle errors
+      print("Error updating user profile: $error");
+      rethrow;
+    }
+  }
+
   getUserProfile() async {
     try {
       var response = await dio.get(
-        AppApiEndpoints.getUserProfile,
+        AppApiEndpoints.getUserProfileUrl,
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
       if (response != null) {
@@ -117,6 +133,21 @@ class ApiServices {
       print("Error updating user profile: $error");
       rethrow;
     }
+  }
+
+  getSiteVisitListReport() async {
+    try {
+      var response = await dio.get(
+        AppApiEndpoints.getSiteVisitListReport,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      if (response != null) {
+        return response;
+      }
+    } catch (error) {
+      rethrow;
+    }
+    return null;
   }
 
 //   logout() async {

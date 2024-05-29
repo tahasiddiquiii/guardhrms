@@ -16,8 +16,16 @@ class AppApiEndpoints {
   static const String checkInUrl = "$baseUrl${_authResource}app/checkIn";
   static const String checkOutUrl = "$baseUrl${_authResource}app/checkOut";
 
+  // Add User
+  static const String addUserUrl = "$baseUrl${_authResource}admin/addUser";
+
   // profile details
-  static const String getUserProfile = "$baseUrl${_authResource}app/getProfile";
+  static const String getUserProfileUrl =
+      "$baseUrl${_authResource}app/getProfile";
+
+// site visir list report
+  static const String getSiteVisitListReport =
+      "$baseUrl${_authResource}admin/getAllSite";
 
   static const String updateUserProfile =
       "$baseUrl${_authResource}user/update-profile";

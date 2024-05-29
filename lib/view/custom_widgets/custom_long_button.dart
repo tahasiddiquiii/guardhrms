@@ -29,7 +29,7 @@ class CustomLongButton extends StatelessWidget {
           padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
             // ignore: prefer_const_constructors
 
-            const EdgeInsets.symmetric(vertical: 14.0, horizontal: 14.0),
+            const EdgeInsets.symmetric(vertical: 8.0, horizontal: 14.0),
           ),
           shape: (isLoading != null && isLoading == true)
               ? MaterialStateProperty.all(const CircleBorder())
