@@ -19,11 +19,13 @@ class RequestForRegularisationScreen02 extends StatefulWidget {
 class _RequestForRegularisationScreen02State
     extends State<RequestForRegularisationScreen02> {
   final regularizationController = Get.put(RegularizationController());
-  TextEditingController reviseCheckInTiming = TextEditingController();
-  TextEditingController reviseCheckOutTiming = TextEditingController();
+  TextEditingController reviseCheckInTimingController = TextEditingController();
+  TextEditingController reviseCheckOutTimingController =
+      TextEditingController();
 
   void _validateAndSubmit() async {
-    if (reviseCheckInTiming.text.isEmpty || reviseCheckOutTiming.text.isEmpty) {
+    if (reviseCheckInTimingController.text.isEmpty ||
+        reviseCheckOutTimingController.text.isEmpty) {
       // Show error message if any field is empty
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -34,8 +36,8 @@ class _RequestForRegularisationScreen02State
       // Proceed with the API request
       regularizationController.requestRegularization(
         context,
-        "${widget.selectedDate}T$reviseCheckInTiming",
-        "${widget.selectedDate}T$reviseCheckOutTiming",
+        "${widget.selectedDate}T$reviseCheckInTimingController",
+        "${widget.selectedDate}T$reviseCheckOutTimingController",
         "66543c0a85172db8017e322c",
       );
 
@@ -50,6 +52,13 @@ class _RequestForRegularisationScreen02State
         Navigator.pop(context);
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    reviseCheckInTimingController.text = "08:30:00";
+    reviseCheckOutTimingController.text = "17:30:00";
   }
 
   @override
@@ -99,14 +108,16 @@ class _RequestForRegularisationScreen02State
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18.0),
             child: buildCustomTextField1(
-                hintText: "_:_:_Hrs", controller: reviseCheckInTiming),
+                hintText: "_:_:_Hrs",
+                controller: reviseCheckInTimingController),
           ),
           buildVSpacer(20),
           _buildText(title: "Revise Check- Out Timings"),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18.0),
             child: buildCustomTextField1(
-                hintText: "_:_:_Hrs", controller: reviseCheckOutTiming),
+                hintText: "_:_:_Hrs",
+                controller: reviseCheckOutTimingController),
           ),
         ],
       ),

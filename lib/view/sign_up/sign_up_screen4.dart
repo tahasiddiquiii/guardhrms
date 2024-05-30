@@ -32,6 +32,7 @@ class _SignUpScreen4State extends State<SignUpScreen4> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Column(
           children: [
