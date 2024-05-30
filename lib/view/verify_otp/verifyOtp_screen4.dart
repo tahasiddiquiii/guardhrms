@@ -144,44 +144,47 @@ class _VerifyOtpScreen4State extends State<VerifyOtpScreen4> {
           // ),
           buildVSpacer(20),
           Obx(() {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: AnimatedContainer(
-                width: authController.isLoading.value == false
-                    ? MediaQuery.of(context).size.width
-                    : 60,
-                duration: const Duration(milliseconds: 300),
-                child: CustomLongButton(
-                  name: "Resend",
-                  bgColor: Color(0xFFFfffff),
-                  textColor: Colors.grey,
-                  showborder: true,
-                  isLoading: authController.isLoading.value,
-                  ontap: () async {
-                    // Call verifyOtp function to verify OTP
-                    await authController.resendOtp();
+            return Visibility(
+              visible: authController.isLoading.value == true ? false : true,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: AnimatedContainer(
+                  width: authController.isLoading.value == false
+                      ? MediaQuery.of(context).size.width
+                      : 60,
+                  duration: const Duration(milliseconds: 300),
+                  child: CustomLongButton(
+                    name: "Resend",
+                    bgColor: Color(0xFFFfffff),
+                    textColor: Colors.grey,
+                    showborder: true,
+                    isLoading: authController.isLoading.value,
+                    ontap: () async {
+                      // Call verifyOtp function to verify OTP
+                      await authController.resendOtp();
 
-                    // Check if verifyOtpModel is not null and status is true
-                    if (authController.resendOtpModel != null &&
-                        authController.resendOtpModel!.message != null) {
-                      // Show success Snackbar
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Colors.green,
-                          content: Text(
-                              '${authController.resendOtpModel!.message}: ${authController.resendOtpModel!.data} '),
-                        ),
-                      );
-                    } else {
-                      // If OTP verification fails or verifyOtpModel is null, show error Snackbar
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text('error occured: Please try again.'),
-                        ),
-                      );
-                    }
-                  },
+                      // Check if verifyOtpModel is not null and status is true
+                      if (authController.resendOtpModel != null &&
+                          authController.resendOtpModel!.message != null) {
+                        // Show success Snackbar
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.green,
+                            content: Text(
+                                '${authController.resendOtpModel!.message}: ${authController.resendOtpModel!.data} '),
+                          ),
+                        );
+                      } else {
+                        // If OTP verification fails or verifyOtpModel is null, show error Snackbar
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text('error occured: Please try again.'),
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
             );

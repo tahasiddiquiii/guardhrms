@@ -135,6 +135,22 @@ class ApiServices {
     }
   }
 
+  putRequestRegularization(dynamic data, attendanceId) async {
+    try {
+      var response = await dio.put(
+        "${AppApiEndpoints.regularizationRequestUrl}$attendanceId",
+        data: data,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      return response;
+    } catch (error) {
+      // Handle errors
+      print("Error updating user profile: $error");
+      rethrow;
+    }
+  }
+
   getSiteVisitListReport() async {
     try {
       var response = await dio.get(

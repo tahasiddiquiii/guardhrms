@@ -94,17 +94,22 @@ class _SignUpScreen4State extends State<SignUpScreen4> {
               );
             }),
             buildVSpacer(20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: CustomButton(
-                  text: "Register",
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => EmployeeDetailScreen4(),
-                      ),
-                    );
-                  }),
+            Obx(
+              () => Visibility(
+                visible: authController.isLoading.value == true ? false : true,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                  child: CustomButton(
+                      text: "Register",
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => EmployeeDetailScreen4(),
+                          ),
+                        );
+                      }),
+                ),
+              ),
             ),
             buildVSpacer(50),
             CheckboxListTile(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:security_app/view/app_widgets/app_widgets.dart';
 import 'package:security_app/view/sign_up/sign_up_screen1.dart';
 import 'package:security_app/view/sign_up/sign_up_screen2.dart';
@@ -30,9 +31,15 @@ class _SelectProfileScreenState extends State<SelectProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    profileCard(1, 'SG/ESG/LPA/LLPA/ACO', SignUpScreen1()),
+                    IgnorePointer(
+                        ignoring: true,
+                        child: profileCard(
+                            1, 'SG/ESG/LPA/LLPA/ACO', SignUpScreen1())),
                     buildHSpacer(30),
-                    profileCard(2, 'Security Supervisor', SignUpScreen2()),
+                    IgnorePointer(
+                        ignoring: true,
+                        child: profileCard(
+                            2, 'Security Supervisor', SignUpScreen2())),
                   ],
                 ),
                 buildVSpacer(20),
@@ -40,8 +47,11 @@ class _SelectProfileScreenState extends State<SelectProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    profileCard(
-                        3, 'Field Officer / Area Manager', SignUpScreen3()),
+                    IgnorePointer(
+                      ignoring: true,
+                      child: profileCard(
+                          3, 'Field Officer / Area Manager', SignUpScreen3()),
+                    ),
                     buildHSpacer(30),
                     profileCard(
                         4,

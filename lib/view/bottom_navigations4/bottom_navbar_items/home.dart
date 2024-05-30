@@ -129,7 +129,8 @@ class _Home4State extends State<Home4> {
                                   buildHSpacer(42),
                                   _buildTextHeader(title: ":"),
                                   _buildTextHeader(
-                                      title: "Branch Head / Regional Head"),
+                                      title:
+                                          "${profileController.profileDetailsModel!.data!.userType!} / Regional Head"),
                                 ],
                               ),
                               buildVSpacer(15),
@@ -687,7 +688,9 @@ class _Home4State extends State<Home4> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) =>
-                                  RequestForRegularisationScreen02(),
+                                  RequestForRegularisationScreen02(
+                                selectedDate: date,
+                              ),
                             ),
                           );
                         }),

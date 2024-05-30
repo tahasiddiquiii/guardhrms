@@ -25,7 +25,7 @@ class CustomLanguage extends StatelessWidget {
         child: Container(
           width: 160,
           height: 130,
-          padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -35,16 +35,20 @@ class CustomLanguage extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.black, // Conditional color
+                  color: isSelected
+                      ? Colors.white
+                      : Colors.black, // Conditional color
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               Text(
                 subtitle,
                 style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.black38, // Conditional color
+                  color: isSelected
+                      ? Colors.white
+                      : Colors.black38, // Conditional color
                   fontSize: 14.0,
                 ),
               ),
@@ -52,7 +56,9 @@ class CustomLanguage extends StatelessWidget {
               Text(
                 text,
                 style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.black26, // Conditional color
+                  color: isSelected
+                      ? Colors.white
+                      : Colors.black26, // Conditional color
                   fontSize: 15.0,
                 ),
               ),

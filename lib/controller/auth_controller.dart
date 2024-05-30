@@ -11,6 +11,7 @@ import '../retrofit/network/api_services.dart';
 
 class AuthController extends GetxController {
   RxBool isLoading = false.obs;
+  RxBool isresendLoading = false.obs;
   RxBool isLoginFail = false.obs;
 
   AuthModel? _authModel;
@@ -23,6 +24,34 @@ class AuthController extends GetxController {
   ResendOtpModel? get resendOtpModel => _resendOtpModel;
 
   Future<AuthModel?> loginApi(
+      BuildContext context, String mobileNumber, String userType) async {
+    isLoading.value = true;
+    isLoginFail.value =
+        false; // Reset the login fail status before making the request
+    try {
+      var response = await ApiServices().login(
+        {"mobileNumber": mobileNumber, "userType": userType},
+      );
+
+      _authModel = AuthModel.fromJson(response);
+      if (authModel!.status == true) {
+        isLoading.value = false;
+        isLoginFail.value = false; // Login was successful
+        return authModel;
+      } else {
+        isLoading.value = false;
+        isLoginFail.value = true; // Login failed
+        return null;
+      }
+    } catch (e) {
+      isLoading.value = false;
+      isLoginFail.value = true; // Login failed due to an exception
+      print(e);
+      return null;
+    }
+  }
+
+  Future<AuthModel?> signUpApi(
       BuildContext context, String mobileNumber, String userType) async {
     isLoading.value = true;
     isLoginFail.value =
@@ -83,7 +112,7 @@ class AuthController extends GetxController {
   }
 
   Future<ResendOtpModel?> resendOtp() async {
-    isLoading.value = true;
+    isresendLoading.value = true;
 
     try {
       var response = await ApiServices().resendOtp(authModel!.id!);
@@ -91,16 +120,16 @@ class AuthController extends GetxController {
       _resendOtpModel = ResendOtpModel.fromJson(response);
 
       if (resendOtpModel!.message == "OTP resent successfully") {
-        isLoading.value = false;
+        isresendLoading.value = false;
 
         return resendOtpModel;
       } else {
-        isLoading.value = false;
+        isresendLoading.value = false;
 
         return null;
       }
     } catch (e) {
-      isLoading.value = false;
+      isresendLoading.value = false;
 
       print(e);
       return null;

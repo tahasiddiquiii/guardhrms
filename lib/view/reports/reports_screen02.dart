@@ -120,11 +120,14 @@ Widget _siteCard(
                                       title: "Date of Visit :",
                                       fontWeight: FontWeight.bold),
                                   _buildText(
-                                      title: DateFormat('dd-MM-yyyy').format(
-                                        DateTime.parse(
-                                            data.deploymentStart.toString()),
-                                      ),
-                                      fontWeight: FontWeight.w400),
+                                    title: DateFormat('dd-MM-yyyy').format(
+                                      data.deploymentStart != null
+                                          ? DateTime.parse(
+                                              data.deploymentStart.toString())
+                                          : DateTime.now(),
+                                    ),
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ],
                               ),
                               buildVSpacer(20),
